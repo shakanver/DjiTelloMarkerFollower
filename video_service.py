@@ -14,7 +14,7 @@ def start(stop_event: Event, tello: Tello, cache: Cache):
 		Each pixel is an array of length 3 represending RGB colour values
 		"""
 		frame = tello.get_frame_read().frame
-		# TODO: I think the current frame is in BGR, need to figure out how to convert it to RGB.
+		frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
 		"""Draw the center of the frame as a circle"""
 		height, width = frame.shape[:2]
