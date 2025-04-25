@@ -35,15 +35,14 @@ def start(stop_event: Event, tello: Tello, cache: Cache):
 		"""If the aruco marker was found then draw a circle on the frame to represent its center"""
 		if marker_corners:
 			marker_corners_array = marker_corners[0][0]
-			aruco_center_x = (marker_corners_array[0][0] + marker_corners_array[1][0])//2
-			aruco_center_y = (marker_corners_array[0][1] + marker_corners_array[2][1])//2
+			aruco_center_x = int((marker_corners_array[0][0] + marker_corners_array[1][0])/2)
+			aruco_center_y = int((marker_corners_array[0][1] + marker_corners_array[2][1])/2)
+			cache.set_aruco_center(aruco_center_x, aruco_center_y)
 			aruco_color = (0, 0 ,255)
 
 			cv2.circle(img=frame, center=(aruco_center_x, aruco_center_y), radius=10, color=aruco_color, thickness=-1)
-			cache.set_aruco_center(aruco_center_x, aruco_center_y)
 		else:
 			cache.set_aruco_center(-1, -1)
-
 
 		if marker_ids is not None:
 			aruco.drawDetectedMarkers(frame, marker_corners, marker_ids)

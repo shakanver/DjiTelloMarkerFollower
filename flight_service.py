@@ -15,6 +15,7 @@ def start(stop_event: Event, tello: Tello, cache: Cache):
 		while True:
 			if stop_event.is_set():
 				print("stop signal triggered, flight service is ending.")
+				break
 
 			print(f"Flight Controller alive, aruco pos: ({cache.get_aruco_center().x}, {cache.get_aruco_center().y}), frame pos: ({cache.get_frame_center().x}, {cache.get_frame_center().y})")
 			# curr_time = time.time()
