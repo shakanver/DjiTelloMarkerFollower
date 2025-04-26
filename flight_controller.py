@@ -24,30 +24,3 @@ class FlightController:
 		speed = self.error_p + self.error_i + self.error_d
 		speed = max(min(speed, MAX_SPEED), MIN_SPEED)
 		return int(speed)
-
-# TODO: REMOVE
-	# def hover(self, desired_height:int, hover_time: int):
-	# 	error_i = 0
-	# 	prev_error = 0
-	# 	prev_time = time.time()
-	# 	for _ in range(hover_time):
-	# 		curr_time = time.time()
-	# 		dt = curr_time - prev_time
-	# 		prev_time = curr_time
-
-	# 		curr_height = self.tello_connection.get_height()
-	# 		curr_error = desired_height - curr_height
-			
-	# 		error_i += curr_error*dt
-	# 		error_d = (curr_error - prev_error)/ dt
-
-	# 		prev_error = curr_error
-			
-	# 		speed = self.k_p*curr_error + self.k_i*error_i + self.k_d*error_d
-	# 		speed = max(min(speed, MAX_SPEED), MIN_SPEED)
-	# 		self.tello_connection.send_rc_control(0, 0, int(speed), 0)
-	# 		print(f"height: {curr_height} error: {curr_error}")
-
-	# 		time.sleep(1)
-
-
