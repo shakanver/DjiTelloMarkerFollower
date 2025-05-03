@@ -67,10 +67,19 @@ except KeyboardInterrupt:
 	flight_thread.join(3)
 
 	data_dir = './data'
-	plt.plot(cache.time_data, cache.x_error_data)
-	plt.savefig(os.path.join(data_dir, f'x_error_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
-	plt.plot(cache.time_data, cache.y_error_data)
-	plt.savefig(os.path.join(data_dir, f'y_error_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
+	if not os.path.exists(data_dir):
+		os.makedirs(data_dir)
+
+	plt.figure()
+	plt.plot(cache.time_data, cache.x_error_data, label='X Error')
+	plt.plot(cache.time_data, cache.y_error_data, label='Y Error')
+	plt.xlabel('Time (s)')
+	plt.ylabel('Error')
+	plt.title('Tracking Errors Over Time')
+	plt.legend()
+	plt.grid(True)
+	plt.savefig(os.path.join(data_dir, f'xy_error_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
+	plt.close()
 	
 finally:
 	print("Freeing all resources")

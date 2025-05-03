@@ -9,8 +9,8 @@ from djitellopy import Tello
 def start(stop_event: Event, tello: Tello, cache: Cache):
 
 	# TODO: Make PID values configurable as well.
-	roll_velocity_controller = FlightController(0.25,0.25,0.25)
-	altitude_velocity_controller = FlightController(0.25,0.25,0.25)
+	roll_velocity_controller = FlightController(k_p=0.05, k_i=0.05, k_d=0.25)
+	altitude_velocity_controller = FlightController(k_p=0.05, k_i=0.05, k_d=0.25)
 
 	try:
 		tello.takeoff()
