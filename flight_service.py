@@ -1,18 +1,21 @@
-from flight_controller import FlightController
-from djitellopy import Tello
 import time
+import numpy as np
+
 from cache import Cache
 from threading import Event
+from flight_controller import FlightController
+from djitellopy import Tello
 
 def start(stop_event: Event, tello: Tello, cache: Cache):
 
 	# TODO: Make PID values configurable as well.
-	roll_velocity_controller = FlightController(0.5,0.5,0.5)
-	altitude_velocity_controller = FlightController(0.5,0.5,0.5)
+	roll_velocity_controller = FlightController(0.25,0.25,0.25)
+	altitude_velocity_controller = FlightController(0.25,0.25,0.25)
 
 	try:
 		tello.takeoff()
 		prev_time = time.time()
+		t = 0
 		while True:
 			if stop_event.is_set():
 				print("stop signal triggered, flight service is ending.")
@@ -32,13 +35,17 @@ def start(stop_event: Event, tello: Tello, cache: Cache):
 			x_error = aruco_center.x - frame_center.x
 			y_error = aruco_center.y - frame_center.y
 
+			cache.append_plot_data(x_error, y_error, t)
+
 			roll_speed = roll_velocity_controller.update(x_error, dt)
 			altitude_speed = altitude_velocity_controller.update(y_error, dt)
 
-			# Send RC command to control the roll, pitch, altitude and yaw speeds respectively
+			"""Send RC command to control the roll, pitch, altitude and yaw speeds respectively"""
 			print(f"RC CONTROLS BEING TRANSMITTED: left/right: {roll_speed} forward/backward: {0} up/down: {altitude_speed} yaw: {0}")
 			tello.send_rc_control(roll_speed, 0, altitude_speed, 0)
 
 			time.sleep(1)
+			t += 1
 	finally:
+		print("landing")
 		tello.land()

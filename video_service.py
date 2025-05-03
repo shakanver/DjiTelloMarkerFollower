@@ -8,6 +8,7 @@ def start(stop_event: Event, tello: Tello, cache: Cache):
 	while True:
 		if stop_event.is_set():
 			print("stop signal triggered, video service is ending.")
+			break
 
 		"""
 		Frame has the shape width x height x 3.

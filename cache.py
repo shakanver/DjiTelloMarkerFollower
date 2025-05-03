@@ -1,3 +1,4 @@
+import numpy as np
 import threading
 from point import Point
 
@@ -5,6 +6,9 @@ class Cache:
 	def __init__(self):
 		self.frame_center = Point(0,0)
 		self.aruco_center = Point(-1,-1)
+		self.x_error_data = np.array([])
+		self.y_error_data = np.array([])
+		self.time_data = np.array([])
 		self.frame = None
 		self.lock = threading.Lock()
 
@@ -33,3 +37,9 @@ class Cache:
 		with self.lock:
 			self.aruco_center.x = x
 			self.aruco_center.y = y
+	
+	def append_plot_data(self, x_error: int, y_error: int,  t):
+		with self.lock:
+			self.x_error_data = np.append(self.x_error_data, x_error)
+			self.y_error_data = np.append(self.y_error_data, y_error)
+			self.time_data = np.append(self.time_data, t)

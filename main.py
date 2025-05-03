@@ -4,6 +4,7 @@ Entry Point
 
 import cv2
 import flight_service
+import matplotlib.pyplot as plt
 import os
 import threading
 import time
@@ -30,7 +31,8 @@ recordings_dir = './recordings'
 if not os.path.exists(recordings_dir):
 	os.makedirs(recordings_dir)
 
-video_out = cv2.VideoWriter(f'recordings/output_{datetime.now().strftime("%d%m%Y_%H%M%S")}.mp4', cv2.VideoWriter_fourcc(*'XVID'), 20.0, (frame_width, frame_height))
+video_file_path = os.path.join(recordings_dir, f'output_{datetime.now().strftime("%d%m%Y_%H%M%S")}.mp4')
+video_out = cv2.VideoWriter(video_file_path, cv2.VideoWriter_fourcc(*'XVID'), 20.0, (frame_width, frame_height))
 
 try:
 	stop_event = threading.Event()
@@ -57,11 +59,21 @@ try:
 	stop_event.set()
 	video_thread.join(3)
 	flight_thread.join(3)
+	
+except KeyboardInterrupt:
+	print("Early termination from the user.")
+	stop_event.set()
+	video_thread.join(3)
+	flight_thread.join(3)
 
-	if video_thread.is_alive() or flight_thread.is_alive():
-		raise Exception("One of the service threads failed to stop, force quitting")
+	data_dir = './data'
+	plt.plot(cache.time_data, cache.x_error_data)
+	plt.savefig(os.path.join(data_dir, f'x_error_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
+	plt.plot(cache.time_data, cache.y_error_data)
+	plt.savefig(os.path.join(data_dir, f'y_error_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
 	
 finally:
+	print("Freeing all resources")
 	video_out.release()
 	tello.streamoff()
 	tello.end()
