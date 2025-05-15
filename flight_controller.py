@@ -1,13 +1,13 @@
 import time
 
-# TODO: move this to a config file? 
+# TODO: move this to a config file?
 
 MAX_SPEED = 100
 MIN_SPEED = -100
 
 class FlightController:
 
-	def __init__(self, k_p: int, k_i: int, k_d):
+	def __init__(self, k_p: float, k_i: float, k_d):
 		self.k_p = k_p
 		self.k_i = k_i
 		self.k_d = k_d

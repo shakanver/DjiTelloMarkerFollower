@@ -1,16 +1,15 @@
 import time
-import numpy as np
 
 from cache import Cache
 from threading import Event
 from flight_controller import FlightController
 from djitellopy import Tello
 
-def start(stop_event: Event, tello: Tello, cache: Cache):
+def start(stop_event: Event, tello: Tello, cache: Cache, k_p: float, k_i, k_d: float):
 
 	# TODO: Make PID values configurable as well.
-	roll_velocity_controller = FlightController(k_p=0.1, k_i=0.1, k_d=0.25)
-	altitude_velocity_controller = FlightController(k_p=0.1, k_i=0.1, k_d=0.25)
+	roll_velocity_controller = FlightController(k_p=k_p, k_i=k_i, k_d=k_d)
+	altitude_velocity_controller = FlightController(k_p=k_p, k_i=k_i, k_d=k_d)
 
 	try:
 		tello.takeoff()
@@ -21,7 +20,7 @@ def start(stop_event: Event, tello: Tello, cache: Cache):
 				print("stop signal triggered, flight service is ending.")
 				break
 
-			print(f"Flight Controller alive, aruco pos: ({cache.get_aruco_center().x}, {cache.get_aruco_center().y}), frame pos: ({cache.get_frame_center().x}, {cache.get_frame_center().y})")
+			print(f"Flight Service alive, aruco pos: ({cache.get_aruco_center().x}, {cache.get_aruco_center().y}), frame pos: ({cache.get_frame_center().x}, {cache.get_frame_center().y})")
 			curr_time = time.time()
 			dt = curr_time - prev_time
 			prev_time = curr_time

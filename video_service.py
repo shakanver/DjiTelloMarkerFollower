@@ -6,6 +6,7 @@ from threading import Event
 
 def start(stop_event: Event, tello: Tello, cache: Cache):
 	while True:
+		print("Video service started.")
 		if stop_event.is_set():
 			print("stop signal triggered, video service is ending.")
 			break
@@ -28,7 +29,7 @@ def start(stop_event: Event, tello: Tello, cache: Cache):
 
 		dictionary = aruco.getPredefinedDictionary(aruco.DICT_6X6_250)
 		detector_params = aruco.DetectorParameters()
-		
+
 		detector = aruco.ArucoDetector(dictionary, detector_params)
 
 		marker_corners, marker_ids, _ = detector.detectMarkers(frame)
