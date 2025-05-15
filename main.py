@@ -5,6 +5,7 @@ import argparse
 import cv2
 import flight_service
 import matplotlib.pyplot as plt
+import logging
 import os
 import threading
 import time
@@ -82,6 +83,7 @@ except KeyboardInterrupt:
 	if not os.path.exists(data_dir):
 		os.makedirs(data_dir)
 
+	# Plot error data
 	plt.figure()
 	plt.plot(cache.time_data, cache.x_error_data, label='X Error')
 	plt.plot(cache.time_data, cache.y_error_data, label='Y Error')
@@ -93,6 +95,17 @@ except KeyboardInterrupt:
 	plt.savefig(os.path.join(data_dir, f'xy_error_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
 	plt.close()
 
+	plt.figure()
+	plt.plot(cache.time_data, cache.x_speed_data, label='X/Roll Speed')
+	plt.plot(cache.time_data, cache.y_speed_data, label='Y/Roll Speed')
+	plt.xlabel('Time (s)')
+	plt.ylabel('Speed')
+	plt.title('Speed Values Over Time')
+	plt.legend()
+	plt.grid(True)
+	plt.savefig(os.path.join(data_dir, f'xy_speed_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
+	plt.close()
+
 finally:
 	print("Freeing all resources")
 	video_out.release()
@@ -101,6 +114,9 @@ finally:
 
 
 	data_dir = './data'
+	if not os.path.exists(data_dir):
+		os.makedirs(data_dir)
+
 	plt.figure()
 	plt.plot(cache.time_data, cache.x_error_data, label='X Error')
 	plt.plot(cache.time_data, cache.y_error_data, label='Y Error')
@@ -111,3 +127,15 @@ finally:
 	plt.grid(True)
 	plt.savefig(os.path.join(data_dir, f'xy_error_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
 	plt.close()
+
+	plt.figure()
+	plt.plot(cache.time_data, cache.x_speed_data, label='X/Roll Speed')
+	plt.plot(cache.time_data, cache.y_speed_data, label='Y/Roll Speed')
+	plt.xlabel('Time (s)')
+	plt.ylabel('Speed')
+	plt.title('Speed Values Over Time')
+	plt.legend()
+	plt.grid(True)
+	plt.savefig(os.path.join(data_dir, f'xy_speed_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
+	plt.close()
+
