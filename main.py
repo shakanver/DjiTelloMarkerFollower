@@ -4,8 +4,6 @@ Entry Point
 import argparse
 import cv2
 import flight_service
-import matplotlib.pyplot as plt
-import logging
 import os
 import threading
 import time
@@ -14,7 +12,7 @@ import video_service
 from djitellopy import Tello
 from cache import Cache
 from datetime import datetime
-
+from logger import logger
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--flight_time', type=int, default=10, help='Duration of the flight time in seconds')
@@ -67,75 +65,28 @@ try:
 		if cv2.waitKey(1) and 0xFF == ord('q'):
 			break
 
-	print(f"Flight time of {FLIGHT_TIME} exceeded preparing to stop the flight.")
+	logger.info(f"Flight time of %s exceeded preparing to stop the flight.", FLIGHT_TIME)
 
 	stop_event.set()
 	video_thread.join(3)
 	flight_thread.join(3)
 
 except KeyboardInterrupt:
-	print("Early termination from the user.")
+	logger.info("Early termination from the user.")
 	stop_event.set()
 	video_thread.join(3)
 	flight_thread.join(3)
 
-	data_dir = './data'
-	if not os.path.exists(data_dir):
-		os.makedirs(data_dir)
-
-	# Plot error data
-	plt.figure()
-	plt.plot(cache.time_data, cache.x_error_data, label='X Error')
-	plt.plot(cache.time_data, cache.y_error_data, label='Y Error')
-	plt.xlabel('Time (s)')
-	plt.ylabel('Error')
-	plt.title('Tracking Errors Over Time')
-	plt.legend()
-	plt.grid(True)
-	plt.savefig(os.path.join(data_dir, f'xy_error_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
-	plt.close()
-
-	plt.figure()
-	plt.plot(cache.time_data, cache.x_speed_data, label='X/Roll Speed')
-	plt.plot(cache.time_data, cache.y_speed_data, label='Y/Roll Speed')
-	plt.xlabel('Time (s)')
-	plt.ylabel('Speed')
-	plt.title('Speed Values Over Time')
-	plt.legend()
-	plt.grid(True)
-	plt.savefig(os.path.join(data_dir, f'xy_speed_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
-	plt.close()
-
 finally:
-	print("Freeing all resources")
+	logger.info("Freeing all resources")
+
 	video_out.release()
 	tello.streamoff()
 	tello.end()
 
-
 	data_dir = './data'
 	if not os.path.exists(data_dir):
 		os.makedirs(data_dir)
 
-	plt.figure()
-	plt.plot(cache.time_data, cache.x_error_data, label='X Error')
-	plt.plot(cache.time_data, cache.y_error_data, label='Y Error')
-	plt.xlabel('Time (s)')
-	plt.ylabel('Error')
-	plt.title(f'Tracking Errors Over Time kp: {K_P} ki: {K_I} kd: {K_D}')
-	plt.legend()
-	plt.grid(True)
-	plt.savefig(os.path.join(data_dir, f'xy_error_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
-	plt.close()
-
-	plt.figure()
-	plt.plot(cache.time_data, cache.x_speed_data, label='X/Roll Speed')
-	plt.plot(cache.time_data, cache.y_speed_data, label='Y/Roll Speed')
-	plt.xlabel('Time (s)')
-	plt.ylabel('Speed')
-	plt.title('Speed Values Over Time')
-	plt.legend()
-	plt.grid(True)
-	plt.savefig(os.path.join(data_dir, f'xy_speed_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
-	plt.close()
+	cache.plot_data(data_dir)
 

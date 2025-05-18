@@ -2,3 +2,4 @@
 .DS_Store
 recordings/*
 data/*
+log.txt

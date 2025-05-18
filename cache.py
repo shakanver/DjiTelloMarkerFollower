@@ -1,6 +1,11 @@
 import numpy as np
 import threading
 from point import Point
+import matplotlib.pyplot as plt
+import os
+from logger import logger
+
+from datetime import datetime
 
 class Cache:
 	def __init__(self):
@@ -51,4 +56,33 @@ class Cache:
 			self.x_error_data = np.append(self.x_error_data, x_speed)
 			self.y_error_data = np.append(self.y_error_data, y_speed)
 			self.time_data = np.append(self.time_data, t)
+
+	def plot_data(self, data_dir: str):
+		logger.debug("Saving plots")
+
+		figure, axis = plt.subplots(nrows=2, ncols=1)
+		error_plot = axis[0, 0]
+		speed_plot = axis[1, 0]
+
+		# Plot error data
+		error_plot.plot(self.time_data, self.x_error_data, label='X Error')
+		error_plot.plot(self.time_data, self.y_error_data, label='Y Error')
+		error_plot.xlabel('Time (s)')
+		error_plot.ylabel('Error')
+		error_plot.set_title('Tracking Errors Over Time')
+		error_plot.legend()
+		error_plot.grid(True)
+		error_plot.savefig(os.path.join(data_dir, f'xy_error_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
+		error_plot.close()
+
+		# Plot speed data
+		speed_plot.plot(self.time_data, self.x_speed_data, label='X/Roll Speed')
+		speed_plot.plot(self.time_data, self.y_speed_data, label='Y/Roll Speed')
+		speed_plot.xlabel('Time (s)')
+		speed_plot.ylabel('Speed')
+		speed_plot.set_title('Speed Values Over Time')
+		speed_plot.legend()
+		speed_plot.grid(True)
+		speed_plot.savefig(os.path.join(data_dir, f'plot_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
+		speed_plot.close()
 
