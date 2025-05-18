@@ -45,44 +45,39 @@ class Cache:
 			self.aruco_center.x = x
 			self.aruco_center.y = y
 
-	def append_error_plot_data(self, x_error: int, y_error: int, t: int):
+	def append_plot_data(self, time: int, x_error: int, y_error: int, x_speed: int, y_speed: int):
 		with self.lock:
 			self.x_error_data = np.append(self.x_error_data, x_error)
 			self.y_error_data = np.append(self.y_error_data, y_error)
-			self.time_data = np.append(self.time_data, t)
-
-	def append_speed_plot_data(self, x_speed: int, y_speed: int, t: int):
-		with self.lock:
-			self.x_error_data = np.append(self.x_error_data, x_speed)
-			self.y_error_data = np.append(self.y_error_data, y_speed)
-			self.time_data = np.append(self.time_data, t)
+			self.x_speed_data = np.append(self.x_speed_data, x_speed)
+			self.y_speed_data = np.append(self.y_speed_data, y_speed)
+			self.time_data = np.append(self.time_data, time)
 
 	def plot_data(self, data_dir: str):
 		logger.debug("Saving plots")
 
 		figure, axis = plt.subplots(nrows=2, ncols=1)
-		error_plot = axis[0, 0]
-		speed_plot = axis[1, 0]
+		error_plot = axis[0]
+		speed_plot = axis[1]
 
 		# Plot error data
-		error_plot.plot(self.time_data, self.x_error_data, label='X Error')
-		error_plot.plot(self.time_data, self.y_error_data, label='Y Error')
-		error_plot.xlabel('Time (s)')
-		error_plot.ylabel('Error')
+		error_plot.plot(self.time_data, self.x_error_data, marker='o', label='X Error')
+		error_plot.plot(self.time_data, self.y_error_data, marker='o', label='Y Error')
+		error_plot.set_xlabel('Time (s)')
+		error_plot.set_ylabel('Error')
 		error_plot.set_title('Tracking Errors Over Time')
 		error_plot.legend()
 		error_plot.grid(True)
-		error_plot.savefig(os.path.join(data_dir, f'xy_error_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
-		error_plot.close()
 
 		# Plot speed data
-		speed_plot.plot(self.time_data, self.x_speed_data, label='X/Roll Speed')
-		speed_plot.plot(self.time_data, self.y_speed_data, label='Y/Roll Speed')
-		speed_plot.xlabel('Time (s)')
-		speed_plot.ylabel('Speed')
+		speed_plot.plot(self.time_data, self.x_speed_data, marker='o', label='X/Roll Speed')
+		speed_plot.plot(self.time_data, self.y_speed_data, marker='o', label='Y/Roll Speed')
+		speed_plot.set_xlabel('Time (s)')
+		speed_plot.set_ylabel('Speed')
 		speed_plot.set_title('Speed Values Over Time')
 		speed_plot.legend()
 		speed_plot.grid(True)
-		speed_plot.savefig(os.path.join(data_dir, f'plot_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
-		speed_plot.close()
+
+		plt.savefig(os.path.join(data_dir, f'plot_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
+		plt.close()
 

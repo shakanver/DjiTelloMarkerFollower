@@ -34,16 +34,14 @@ def start(stop_event: Event, tello: Tello, cache: Cache, k_p: float, k_i, k_d: f
 			x_error = aruco_center.x - frame_center.x
 			y_error = aruco_center.y - frame_center.y
 
-			cache.append_error_plot_data(x_error, y_error, t)
-
 			roll_speed = roll_velocity_controller.update(x_error, dt)
 			altitude_speed = altitude_velocity_controller.update(y_error, dt)
-
-			cache.append_speed_plot_data(roll_speed, altitude_speed, t)
 
 			"""Send RC command to control the roll, pitch, altitude and yaw speeds respectively"""
 			logger.debug(f"RC CONTROLS BEING TRANSMITTED: left/right: %s forward/backward: 0 up/down: %s yaw: 0", roll_speed, altitude_speed)
 			tello.send_rc_control(roll_speed, 0, altitude_speed, 0)
+
+			cache.append_plot_data(t, x_error, y_error, roll_speed, altitude_speed)
 
 			time.sleep(1)
 			t += 1
