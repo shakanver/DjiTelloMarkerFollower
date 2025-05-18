@@ -70,14 +70,15 @@ class Cache:
 		error_plot.grid(True)
 
 		# Plot speed data
-		speed_plot.plot(self.time_data, self.x_speed_data, marker='o', label='X/Roll Speed')
-		speed_plot.plot(self.time_data, self.y_speed_data, marker='o', label='Y/Roll Speed')
+		speed_plot.plot(self.time_data, self.x_speed_data, marker='o', label='X Speed')
+		speed_plot.plot(self.time_data, self.y_speed_data, marker='o', label='Y Speed')
 		speed_plot.set_xlabel('Time (s)')
 		speed_plot.set_ylabel('Speed')
 		speed_plot.set_title('Speed Values Over Time')
 		speed_plot.legend()
 		speed_plot.grid(True)
 
+		figure.tight_layout()
 		plt.savefig(os.path.join(data_dir, f'plot_{datetime.now().strftime("%d%m%Y_%H%M%S")}.png'))
 		plt.close()
 
