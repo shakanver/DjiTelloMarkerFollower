@@ -49,7 +49,7 @@ def start(stop_event: Event, tello: Tello, cache: Cache, k_p: float, k_i, k_d: f
 
 			cache.append_plot_data(t, x_error, y_error, roll_speed, altitude_speed)
 
-			time.sleep(1)
+			time.sleep(0.1)
 			t += 1
 	finally:
 		logger.info("landing")
