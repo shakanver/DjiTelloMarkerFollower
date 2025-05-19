@@ -39,7 +39,6 @@ def start(stop_event: Event, tello: Tello, cache: Cache):
 		frame_center_colour = (0,255,0)
 
 		cv2.circle(img=frame, center=(frame_center_x, frame_center_y), radius=10, color=frame_center_colour, thickness=-1)
-		cv2.putText(frame, f"fr_x: {frame_center_x} fr_y: {frame_center_y}", (frame_center_x, frame_center_y), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 0), 3)
 
 		cache.set_frame_center(frame_center_x, frame_center_y)
 
@@ -59,7 +58,7 @@ def start(stop_event: Event, tello: Tello, cache: Cache):
 			aruco_color = (0, 0 ,255)
 
 			cv2.circle(img=frame, center=(aruco_center_x, aruco_center_y), radius=10, color=aruco_color, thickness=-1)
-			cv2.putText(frame, f"ar_x: {aruco_center_x} ar_y: {aruco_center_y}", (250, 0), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 0), 1)
+			cv2.putText(frame, f"err_x: {aruco_center_x - frame_center_x} err_y: {frame_center_y - aruco_center_y}", (frame_center_x, frame_center_y), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 255, 0), 1)
 		else:
 			cache.set_aruco_center(-1, -1)
 
