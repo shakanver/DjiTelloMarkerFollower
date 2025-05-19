@@ -24,6 +24,11 @@ def start(stop_event: Event, tello: Tello, cache: Cache, k_p: float, k_i, k_d: f
 			curr_time = time.time()
 			dt = curr_time - prev_time
 			prev_time = curr_time
+			curr_height = tello.get_height()
+
+			if curr_height > 140:
+				tello.send_rc_control(0, 0, -30, 0)
+				continue
 
 			aruco_center = cache.get_aruco_center()
 			if aruco_center.x == -1 or aruco_center.y == -1:
