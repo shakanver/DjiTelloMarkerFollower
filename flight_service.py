@@ -32,7 +32,8 @@ def start(stop_event: Event, tello: Tello, cache: Cache, k_p: float, k_i, k_d: f
 			frame_center = cache.get_frame_center()
 
 			x_error = aruco_center.x - frame_center.x
-			y_error = aruco_center.y - frame_center.y
+			# reversing the subtraction order for y values because y values increase from top to bottom
+			y_error =  frame_center.y - aruco_center.y
 
 			roll_speed = roll_velocity_controller.update(x_error, dt)
 			altitude_speed = altitude_velocity_controller.update(y_error, dt)

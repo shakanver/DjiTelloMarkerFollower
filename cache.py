@@ -70,7 +70,7 @@ class Cache:
 		error_plot.grid(True)
 
 		# Plot speed data
-		speed_plot.plot(self.time_data, self.x_speed_data, marker='o', label='X Speed')
+		speed_plot.plot(self.time_data, self.x_speed_data, marker='o', label='Xl Speed')
 		speed_plot.plot(self.time_data, self.y_speed_data, marker='o', label='Y Speed')
 		speed_plot.set_xlabel('Time (s)')
 		speed_plot.set_ylabel('Speed')

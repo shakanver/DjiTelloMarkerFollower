@@ -89,4 +89,3 @@ finally:
 		os.makedirs(data_dir)
 
 	cache.plot_data(data_dir)
-
