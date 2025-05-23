@@ -26,8 +26,8 @@ def start(stop_event: Event, tello: Tello, cache: Cache, k_p: float, k_i, k_d: f
 			prev_time = curr_time
 			curr_height = tello.get_height()
 
-			if curr_height > 140:
-				tello.send_rc_control(0, 0, -30, 0)
+			if curr_height > 110:
+				tello.send_rc_control(0, 0, -20, 0)
 				continue
 
 			aruco_center = cache.get_aruco_center()
@@ -49,7 +49,7 @@ def start(stop_event: Event, tello: Tello, cache: Cache, k_p: float, k_i, k_d: f
 
 			cache.append_plot_data(t, x_error, y_error, roll_speed, altitude_speed)
 
-			time.sleep(0.1)
+			time.sleep(0.05)
 			t += 1
 	finally:
 		logger.info("landing")
