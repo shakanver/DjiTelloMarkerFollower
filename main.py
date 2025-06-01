@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
 	ProcessManager.register('Cache', Cache)
 
-	with ProcessManager(address=('', 50000)) as manager:
+	with ProcessManager() as manager:
 		"""Create a Tello instance, connect to it and enable video streaming services"""
 		tello = Tello()
 		tello.connect()
